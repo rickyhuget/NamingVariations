@@ -6,22 +6,6 @@ using namespace std;
 
 // UTILITY FUNCTIONS
 
-char getSecondChar(string s) {
-  return s[2];
-}
-
-string stripFirstFour(string input) {
-  input.erase(0, 4);
-  return input;
-}
-
-string stripParentheses(string input) {
-  input.erase(input.end() - 2, input.end());
-    return input;
-}
-
-// utility functions, bool
-
 bool isSplit(string input) {
   if (input[0] == 'S') {
     return true;
@@ -57,23 +41,6 @@ bool isLowercase(char c) {
   return false;
 }
 
-string makeUppercase(string input, int index) {
-  if (isLowercase(input[index])) {
-    input[index] = char (input[index] - 32);
-  }
-  return input;
-}
-
-string deleteSpacesAndMakeUppercase(string input) {
-  for (int i = 0; i < input.length(); i++) {
-    if (input[i] == ' ') {
-      input.erase(i, 1);
-      input = makeUppercase(input, i);
-    }
-  }
-  return input;
-}
-
 bool isUppercase(char c) {
   if ((65 <= c) && (c <= 90)) {
     return true;
@@ -81,14 +48,15 @@ bool isUppercase(char c) {
   return false;
 }
 
-string addSpaces(string input) {
-  for (int i = 1; i < input.size(); i++) {
-    if (isUppercase(input[i])) {
-      input = input.insert(i, " "); // at position i, insert a space
-      i++;
-    }
+char getSecondChar(string s) {
+  return s[2];
+}
+
+char makeUppercase(char c) {
+  if (isLowercase(c)) {
+    c = char (c - 32);
   }
-  return input;
+  return c;
 }
 
 char makeLowercase(char c) {
@@ -98,6 +66,49 @@ char makeLowercase(char c) {
   return c;
 }
 
+string stripFirstFour(string input) {
+  input.erase(0, 4);
+  return input;
+}
+
+string stripLastTwo(string input) {
+  input.erase(input.end() - 2, input.end());
+    return input;
+}
+
+string stripLeadingSpaces(string input) {
+  int index = 0;
+  while (input[index] == ' ') {index++;}
+  return input.substr(index);
+}
+
+string deleteRunningSpaces(string input, int index) {
+  while (input[index] == ' ') {
+    input.erase(index, 1);
+  }
+  return input;
+}
+
+string deleteSpacesAndMakeUppercase(string input) {
+  for (int i = 0; i < input.length(); i++) {
+    if (input[i] == ' ') {
+	  input = deleteRunningSpaces(input, i);
+      input[i] = makeUppercase(input[i]);
+    }
+  }
+  return input;
+}
+
+string addSpacesBeforeUppercase(string input) {
+  for (int i = 1; i < input.size(); i++) {
+    if (isUppercase(input[i])) {
+      input = input.insert(i, " ");
+      i++;
+    }
+  }
+  return input;
+}
+
 string makeAllLowercase(string input) {
   for (int i = 0; i < input.size(); i++) {
       input[i] = makeLowercase(input[i]);
@@ -105,37 +116,31 @@ string makeAllLowercase(string input) {
   return input;
 }
 
-string makeFirstLettersUppercase(string input) {
-  input = makeUppercase(input, 0);
+string makeFirstLetterUppercase(string input) {
+  input[0] = makeUppercase(input[0]);
   return input;
 }
 
-string makeFirstLettersLowercase(string input) {
+string makeFirstLetterLowercase(string input) {
   input[0] = makeLowercase(input[0]);
   return input;
 }
 
 string splitName(string input) {
   if (isMethod(input)) {
-    input = stripParentheses(input);
+    input = stripLastTwo(input);
   }
   input = stripFirstFour(input);
-  input = makeFirstLettersLowercase(input);
-  input = addSpaces(input);
+  input = makeFirstLetterLowercase(input);
+  input = addSpacesBeforeUppercase(input);
   input = makeAllLowercase(input);
 
   return input;
 }
 
-void printName(string name) {
-  cout << name << endl;
-}
+// CLASSES
 
-class Name {
-
-};
-
-class MethodName: public Name {
+class MethodName {
   public:
     string name;
 
@@ -145,12 +150,13 @@ class MethodName: public Name {
 
     void combineMethodName() {
       name = stripFirstFour(name);
+	  name = stripLeadingSpaces(name);
       name = deleteSpacesAndMakeUppercase(name);
       name += "()";
     }
 };
 
-class ClassName: public Name {
+class ClassName {
   public:
     string name;
 
@@ -160,12 +166,13 @@ class ClassName: public Name {
 
     void combineClassName() {
       name = stripFirstFour(name);
-      name = makeFirstLettersUppercase(name);
+	  name = stripLeadingSpaces(name);
+      name = makeFirstLetterUppercase(name);
       name = deleteSpacesAndMakeUppercase(name);
     }
 };
 
-class VariableName: public Name {
+class VariableName {
   public:
     string name;
 
@@ -175,13 +182,15 @@ class VariableName: public Name {
 
     void combineVariableName() {
       name = stripFirstFour(name);
+	  name = stripLeadingSpaces(name);
       name = deleteSpacesAndMakeUppercase(name);
     }
 };
 
-int main() {
+// ---MAIN---
 
-  //vector<Name> names;
+int main() {
+	
   vector<MethodName> methods;
   vector<ClassName> classes;
   vector<VariableName> variables;
@@ -203,17 +212,17 @@ int main() {
       else if (isMethod(input)) {
         methods.push_back(MethodName(input));
         methods.back().combineMethodName();
-        printName(methods.back().name);
+		cout << methods.back().name << endl;
       }
       else if (isClass(input)) {
         classes.push_back(ClassName(input));
         classes.back().combineClassName();
-        printName(classes.back().name);
+		cout << classes.back().name << endl;
       }
       else if (isVariable(input)) {
         variables.push_back(VariableName(input));
         variables.back().combineVariableName();
-        printName(variables.back().name);
+		cout << variables.back().name << endl;
       }
       else {cout << "Error1\n";}
     }
