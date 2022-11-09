@@ -1,66 +1,224 @@
-#include <cmath>
-//#include <cstdio>
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <string>
 using namespace std;
 
+// UTILITY FUNCTIONS
 
-string split(string input) {
-    if ((input[4] >= 'A') && (input[4] <= 'Z')) { // if upper case
-        input[4] = input[4] + 32; // to lower case
-    }
-    
-    // iterate through input to add spaces and make lower cases
-    for (int i = 5; i < input.length(); i++) {
-        if ((input[i] >= 'A') && (input[i] <= 'Z')) {
-            input[i] = input[i] + 32; // make lower case
-            input.insert(i, " "); // add space
-        }
-    }
-    if (input[2] == 'M') { // if method
-        input = input.substr(0, input.length()-2); // take "()" off
-    }
-    
-    return input.substr(4, input.length()-4);
+char getSecondChar(string s) {
+  return s[2];
 }
 
-string combine(string input) {
-    if (input[2] == 'C') { // if class
-        input[4] = input[4] - 32; // make upper case
-    }
-    
-    // iterate thru input to delete spaces and make camel case
-    for (int i = 5; i < input.length(); i++) {
-        if (input[i] == ' ') { // if space
-            input.erase(i, 1); // erase one element
-            input[i] = input[i] - 32; // make upper case
-        }
-    }
-    
-    if (input[2] == 'M') { // if method
-        input = input + "(" + ")"; // add parentheses
-    }
-    
-    return input.substr(4, input.length()-4);
+string stripFirstFour(string input) {
+  input.erase(0, 4);
+  return input;
 }
+
+string stripParentheses(string input) {
+  input.erase(input.end() - 2, input.end());
+    return input;
+}
+
+// utility functions, bool
+
+bool isSplit(string input) {
+  if (input[0] == 'S') {
+    return true;
+  }
+    return false;
+}
+
+bool isMethod(string input) {
+  if (input[2] == 'M') {
+    return true;
+  }
+    return false;
+}
+
+bool isClass(string input) {
+  if (input[2] == 'C') {
+    return true;
+  }
+    return false;
+}
+
+bool isVariable(string input) {
+  if (input[2] == 'V') {
+    return true;
+  }
+    return false;
+}
+
+bool isLowercase(char c) {
+  if ((97 <= c) && (c <= 122)) {
+    return true;
+  }
+  return false;
+}
+
+string makeUppercase(string input, int index) {
+  if (isLowercase(input[index])) {
+    input[index] = char (input[index] - 32);
+  }
+  return input;
+}
+
+string deleteSpacesAndMakeUppercase(string input) {
+  for (int i = 0; i < input.length(); i++) {
+    if (input[i] == ' ') {
+      input.erase(i, 1);
+      input = makeUppercase(input, i);
+    }
+  }
+  return input;
+}
+
+bool isUppercase(char c) {
+  if ((65 <= c) && (c <= 90)) {
+    return true;
+  }
+  return false;
+}
+
+string addSpaces(string input) {
+  for (int i = 1; i < input.size(); i++) {
+    if (isUppercase(input[i])) {
+      input = input.insert(i, " "); // at position i, insert a space
+      i++;
+    }
+  }
+  return input;
+}
+
+char makeLowercase(char c) {
+  if (isUppercase(c)) {
+    c = char (c + 32);
+  }
+  return c;
+}
+
+string makeAllLowercase(string input) {
+  for (int i = 0; i < input.size(); i++) {
+      input[i] = makeLowercase(input[i]);
+  }
+  return input;
+}
+
+string makeFirstLettersUppercase(string input) {
+  input = makeUppercase(input, 0);
+  return input;
+}
+
+string makeFirstLettersLowercase(string input) {
+  input[0] = makeLowercase(input[0]);
+  return input;
+}
+
+string splitName(string input) {
+  if (isMethod(input)) {
+    input = stripParentheses(input);
+  }
+  input = stripFirstFour(input);
+  input = makeFirstLettersLowercase(input);
+  input = addSpaces(input);
+  input = makeAllLowercase(input);
+
+  return input;
+}
+
+void printName(string name) {
+  cout << name << endl;
+}
+
+class Name {
+
+};
+
+class MethodName: public Name {
+  public:
+    string name;
+
+    MethodName(string input) {
+      name = input;
+    }
+
+    void combineMethodName() {
+      name = stripFirstFour(name);
+      name = deleteSpacesAndMakeUppercase(name);
+      name += "()";
+    }
+};
+
+class ClassName: public Name {
+  public:
+    string name;
+
+    ClassName(string input) {
+      name = input;
+    }
+
+    void combineClassName() {
+      name = stripFirstFour(name);
+      name = makeFirstLettersUppercase(name);
+      name = deleteSpacesAndMakeUppercase(name);
+    }
+};
+
+class VariableName: public Name {
+  public:
+    string name;
+
+    VariableName(string input) {
+      name = input;
+    }
+
+    void combineVariableName() {
+      name = stripFirstFour(name);
+      name = deleteSpacesAndMakeUppercase(name);
+    }
+};
 
 int main() {
-    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
-    string input;
-    //int iter = 0;
-    while (getline(cin, input)) {
-        if (input[0] == 'S') {
-            input = split(input);
-        }
-        if (input[0] == 'C') {
-            input = combine(input);
-        }
-        
-        cout << input << endl;
-        //iter++;
-    };
-    
-    return 0;
+
+  //vector<Name> names;
+  vector<MethodName> methods;
+  vector<ClassName> classes;
+  vector<VariableName> variables;
+  vector<string> splitNames;
+  string input;
+
+  do {
+    getline(cin, input);
+  
+    if (isSplit(input)) {
+      input = splitName(input);
+      splitNames.push_back(input);
+      cout << splitNames.back() << endl;
+    }
+    else {
+      if (input == "exit") {
+        break;
+      }
+      else if (isMethod(input)) {
+        methods.push_back(MethodName(input));
+        methods.back().combineMethodName();
+        printName(methods.back().name);
+      }
+      else if (isClass(input)) {
+        classes.push_back(ClassName(input));
+        classes.back().combineClassName();
+        printName(classes.back().name);
+      }
+      else if (isVariable(input)) {
+        variables.push_back(VariableName(input));
+        variables.back().combineVariableName();
+        printName(variables.back().name);
+      }
+      else {cout << "Error1\n";}
+    }
+  } while (input != "exit");
+
+  cout << "program terminated" << endl;
+  return 0;
 }
