@@ -25,29 +25,29 @@ For each input line, your program should print either the space-delimited list o
   
 Sample Input:
 
-  S;M;plasticCup()
+    S;M;plasticCup()
   
-  C;V;mobile phone
+    C;V;mobile phone
   
-  C;C;coffee machine
+    C;C;coffee machine
   
-  S;C;LargeSoftwareBook
+    S;C;LargeSoftwareBook
   
-  C;M;white sheet of paper
+    C;M;white sheet of paper
   
-  S;V;pictureFrame
+    S;V;pictureFrame
 
 Sample Output:
 
-  plastic cup
+    plastic cup
   
-  mobilePhone
+    mobilePhone
   
-  CoffeeMachine
+    CoffeeMachine
   
-  large software book
+    large software book
   
-  whiteSheetOfPaper()
+    whiteSheetOfPaper()
   
-  picture frame
+    picture frame
   
