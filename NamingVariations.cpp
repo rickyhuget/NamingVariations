@@ -27,7 +27,7 @@ int main() {
       names.back().createName();
       names.back().printName();
     }
-    else { cout << "Error1" << endl; }
+    else { cout << "Incorrect input. Try again." << endl; }
     
   } while (input != "exit");
 
