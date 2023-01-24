@@ -5,52 +5,31 @@
 using namespace std;
 
 bool splitCommand(string s) {
-  if (s[0] == 'S' || s[0] == 's') {
-    return true;
-  }
-  return false;
+  return (s[0] == 'S' || s[0] == 's');
 }
 
 bool combineCommand(string s) {
-  if (s[0] == 'C' || s[0] == 'c') {
-    return true;
-  }
-  return false;
+  return (s[0] == 'C' || s[0] == 'c');
 }
 
 bool isMethod(char c) {
-  if (c == 'M' || c == 'm') {
-    return true;
-  }
-  return false;
+  return (c == 'M' || c == 'm');
 }
 
 bool isClass(char c) {
-  if (c == 'C' || c == 'c') {
-    return true;
-  }
-  return false;
+  return (c == 'C' || c == 'c');
 }
 
 bool isVariable(char c) {
-  if (c == 'V' || c == 'v') {
-    return true;
-  }
-  return false;
+  return (c == 'V' || c == 'v');
 }
 
 bool isLowercase(char c) {
-  if ((97 <= c) && (c <= 122)) {
-    return true;
-  }
-  return false;
+  if ((97 <= c) && (c <= 122));
 }
 
 bool isUppercase(char c) {
-  if ((65 <= c) && (c <= 90)) {
-    return true;
-  }
-  return false;
+  return ((65 <= c) && (c <= 90));
 }
 
 char getSecondChar(string s) {
@@ -85,7 +64,7 @@ void deleteRunningSpaces(string &input, int index) {
 void deleteSpacesAndMakeUppercase(string &input) {
   for (int i = 0; i < input.length(); i++) {
     if (input[i] == ' ') {
-	  deleteRunningSpaces(input, i);
+      deleteRunningSpaces(input, i);
       makeUppercase(input[i]);
     }
   }
