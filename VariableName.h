@@ -7,9 +7,9 @@
 class VariableName : public AbstractName {
   string combine(string name) {
     stripFirstFour(name);
-	stripLeadingSpaces(name);
+    stripLeadingSpaces(name);
     deleteSpacesAndMakeUppercase(name);
-	makeLowercase(name[0]);
+    makeLowercase(name[0]);
     return name;
   }
 };
