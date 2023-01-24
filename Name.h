@@ -15,7 +15,7 @@ class Name {
     char type_;
   public:
     Name(string input, char c) {
-	  createdName_ = NULL;
+      createdName_ = NULL;
       this->type_ = c;
       this->name_ = input;
     }
